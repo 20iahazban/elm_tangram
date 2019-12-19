@@ -485,11 +485,22 @@ camel =
 
 letter_u : Pattern
 letter_u =
-    { tb1 = Target -410 50 90
-    , tb2 = Target 0 310 90 -- done
-    , tm = Target -310 -310 180 -- done
-    , sqr = Target 0 -130 45 -- done
-    , par = Target -89 -340 135 -- done
-    , ts1 = Target 30 50 135 -- done
-    , ts2 = Target -410 360 270 -- done
+    { tb1 = Target -210 50 90
+    , tb2 = Target 200 310 90 -- done
+    , tm = Target -110 -310 180 -- done
+    , sqr = Target 200 -130 45 -- done
+    , par = Target 111 -340 135 -- done
+    , ts1 = Target 230 50 135 -- done
+    , ts2 = Target -210 360 270 -- done
+    }
+
+letter_i : Pattern
+letter_i =
+    { tb1 = Target -210 50 90
+    , tb2 = Target 200 310 90 
+    , tm = Target -110 -310 180 
+    , sqr = Target 200 -130 45 
+    , par = Target 111 -340 135 
+    , ts1 = Target 230 50 135 
+    , ts2 = Target -210 360 270 
     }
