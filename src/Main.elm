@@ -1,107 +1,140 @@
 module Main exposing (main)
 
-import Html exposing (Html, div)
-import Html.Attributes exposing (class)
-import Svg exposing (Svg, g, polygon, svg)
-import Svg.Attributes exposing (fill, points, style, transform, viewBox)
+import Browser
+import Browser.Events as E
+import Cycle
+import Html exposing (Html, br, div, span, text)
+import Html.Attributes as Html_attr exposing (class)
+import Html.Events exposing (onClick)
+import Logo
+import Time
 
 
-main : Html msg
+
+-- MAIN
+
+
 main =
+    Browser.document
+        { init = \() -> ( init, Cmd.none )
+        , update = \msg model -> ( update msg model, Cmd.none )
+        , subscriptions = subscriptions
+        , view =
+            \model ->
+                { title = "Elm - A delightful language for reliable webapps"
+                , body =
+                    [ viewSplash model
+                    ]
+                }
+        }
+
+
+
+-- MODEL
+
+
+type alias Model =
+    { logo : Logo.Model
+    , patterns : Cycle.Cycle Logo.Pattern
+    , visibility : E.Visibility
+    }
+
+
+init : Model
+init =
+    { logo = Logo.start
+    , visibility = E.Visible
+    , patterns =
+        Cycle.init
+            Logo.heart
+            [ Logo.camel
+            , Logo.cat
+            , Logo.bird
+            , Logo.house
+            , Logo.child
+            , Logo.logo
+            , Logo.letter_u
+            ]
+    }
+
+
+
+-- UPDATE
+
+
+type Msg
+    = MouseClicked
+    | VisibilityChanged E.Visibility
+    | TimeDelta Float
+    | TimePassed
+
+
+update : Msg -> Model -> Model
+update msg model =
+    case msg of
+        MouseClicked ->
+            { model
+                | patterns = Cycle.step model.patterns
+                , logo = Logo.setPattern (Cycle.next model.patterns) model.logo
+            }
+
+        TimeDelta timeDelta ->
+            { model
+                | logo =
+                    if Logo.isMoving model.logo then
+                        Logo.step timeDelta model.logo
+
+                    else
+                        model.logo
+            }
+
+        VisibilityChanged visibility ->
+            { model | visibility = visibility }
+
+        TimePassed ->
+            { model
+                | patterns = Cycle.step model.patterns
+                , logo = Logo.setPattern (Cycle.next model.patterns) model.logo
+            }
+
+
+
+-- VIEW SPLASH
+
+
+viewSplash : Model -> Html Msg
+viewSplash model =
     div
         [ class "splash"
         ]
         [ div
             [ class "tangram"
             ]
-            [ svg
-                [ viewBox "-600 -600 1200 1200", style "color:white;" ]
-                [ g
-                    [ transform "scale(1 -1)"
-                    ]
-                    [ viewShape start.tb1 triangleBig
-                    , viewShape start.tb2 triangleBig
-                    , viewShape start.tm triangleMedium
-                    , viewShape start.sqr square
-                    , viewShape start.par parallelogram
-                    , viewShape start.ts1 triangleSmall
-                    , viewShape start.ts2 triangleSmall
-                    ]
+            [ Logo.view
+                [ Html_attr.style "color" "white"
+                , onClick MouseClicked
                 ]
+                model.logo
             ]
         ]
 
 
-start : Model
-start =
-    { tb1 = Static 0 -210 0
-    , tb2 = Static -210 0 90
-    , tm = Static 207 207 45
-    , sqr = Static 150 0 0
-    , par = Static -89 239 0
-    , ts1 = Static 0 106 180
-    , ts2 = Static 256 -150 270
-    }
+
+-- SUBSCRIPTIONS
 
 
-type alias Model =
-    { tb1 : Shape
-    , tb2 : Shape
-    , tm : Shape
-    , sqr : Shape
-    , par : Shape
-    , ts1 : Shape
-    , ts2 : Shape
-    }
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    Sub.batch
+        [ E.onVisibilityChange VisibilityChanged
+        , case model.visibility of
+            E.Hidden ->
+                Sub.none
 
+            E.Visible ->
+                if Logo.isMoving model.logo then
+                    E.onAnimationFrameDelta TimeDelta
 
-type Shape
-    = Static Float Float Float
-    | Moving Float Float Float Float Float Float Float Float Float
-
-
-viewShape : Shape -> String -> Svg msg
-viewShape shape coordinates =
-    case shape of
-        Static x y a ->
-            viewShapeHelp x y a coordinates
-
-        Moving _ _ _ x y a _ _ _ ->
-            viewShapeHelp x y a coordinates
-
-
-viewShapeHelp : Float -> Float -> Float -> String -> Svg msg
-viewShapeHelp x y a coordinates =
-    polygon
-        [ fill "currentColor"
-        , points coordinates
-        , transform <|
-            "translate("
-                ++ String.fromFloat x
-                ++ " "
-                ++ String.fromFloat y
-                ++ ") rotate("
-                ++ String.fromFloat -a
-                ++ ")"
+                else
+                    Time.every 4000 (\_ -> TimePassed)
         ]
-        []
-
-
-triangleBig =
-    "-280,-90 0,190 280,-90"
-
-
-triangleMedium =
-    "-198,-66 0,132 198,-66"
-
-
-triangleSmall =
-    "-130,-44 0,86  130,-44"
-
-
-square =
-    "-130,0 0,-130 130,0 0,130"
-
-
-parallelogram =
-    "-191,61 69,61 191,-61 -69,-61"
