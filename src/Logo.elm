@@ -63,7 +63,7 @@ start =
 view : List (Html.Attribute msg) -> Model -> Html.Html msg
 view attrs model =
     svg
-        (viewBox "-600 -600 1200 1200" :: attrs)
+        (viewBox "-1500 -1500 3000 3000" :: attrs)
         [ g
             [ transform "scale(1 -1)"
             ]
@@ -498,11 +498,11 @@ letter_u =
 
 letter_i : Pattern
 letter_i =
-    { tb1 = Target 0 -250 90 -- done
-    , tb2 = Target 100 70 -90 -- done
-    , tm = Target 100 -470 -225 -- done
-    , sqr = Target 50 700 45 -- done
-    , par = Target 129 160 -90 --done
-    , ts1 = Target -45 240 90 -- done
-    , ts2 = Target 60 340 180 -- done
+    { tb1 = Target -50 -250 90 -- done
+    , tb2 = Target 50 70 -90 -- done
+    , tm = Target 50 -470 -225 -- done
+    , sqr = Target 0 600 45 -- done
+    , par = Target 79 160 -90 --done
+    , ts1 = Target -95 240 90 -- done
+    , ts2 = Target 10 340 180 -- done
     }
