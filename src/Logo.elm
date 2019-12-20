@@ -8,6 +8,7 @@ module Logo exposing
     , heart
     , house
     , isMoving
+    , letter_i
     , letter_u
     , logo
     , perturb
@@ -494,13 +495,14 @@ letter_u =
     , ts2 = Target -210 360 270 -- done
     }
 
+
 letter_i : Pattern
 letter_i =
-    { tb1 = Target -210 50 90
-    , tb2 = Target 200 310 90 
-    , tm = Target -110 -310 180 
-    , sqr = Target 200 -130 45 
-    , par = Target 111 -340 135 
-    , ts1 = Target 230 50 135 
-    , ts2 = Target -210 360 270 
+    { tb1 = Target 0 -250 90 -- done
+    , tb2 = Target 100 70 -90 -- done
+    , tm = Target 100 -470 -225 -- done
+    , sqr = Target 50 700 45 -- done
+    , par = Target 129 160 -90 --done
+    , ts1 = Target -45 240 90 -- done
+    , ts2 = Target 60 340 180 -- done
     }

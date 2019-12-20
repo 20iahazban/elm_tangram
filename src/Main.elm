@@ -46,13 +46,8 @@ init =
     , visibility = E.Visible
     , patterns =
         Cycle.init
-            Logo.heart
-            [ Logo.camel
-            , Logo.cat
-            , Logo.bird
-            , Logo.house
-            , Logo.child
-            , Logo.logo
+            Logo.letter_i
+            [ Logo.heart
             , Logo.letter_u
             ]
     }
@@ -92,10 +87,7 @@ update msg model =
             { model | visibility = visibility }
 
         TimePassed ->
-            { model
-                | patterns = Cycle.step model.patterns
-                , logo = Logo.setPattern (Cycle.next model.patterns) model.logo
-            }
+            model
 
 
 
